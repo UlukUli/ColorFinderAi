@@ -1,27 +1,23 @@
 const express = require("express");
-const { Client } = require("pg"); // Импортируем клиент PostgreSQL
-const config = require("config");
-const PORT = 5000; // Исправили регистр переменной
+const cors = require("cors");
+
+require("./database");
+
+const authRoutes = require("./routes/auth.routes");
+const paletteRoutes = require("./routes/palette.routes");
 
 const app = express();
 
-// Создаем подключение к PostgreSQL, забирая строку соединения из конфига
-// const client = new Client({
-//   connectionString: config.get("dbUrl"), 
-// });
+app.use(cors());
 
-const start = async () => {
-  try {
-    // Подключаемся к базе данных PostgreSQL
-    // await client.connect();
-    // console.log("Успешное подключение к PostgreSQL");
+app.use(express.json());
 
-    app.listen(PORT, () => {
-      console.log("Сервер запустился на порту:", PORT);
-    });
-  } catch (e) {
-    console.log("Ошибка при запуске:", e);
-  }
-};
+app.use("/auth", authRoutes);
 
-start();
+app.use("/palette", paletteRoutes);
+
+const PORT = 5000;
+
+app.listen(PORT, () => {
+console.log("server started");
+});
