@@ -99,7 +99,18 @@ body {
 /* ═══ LEFT ════════════════════════════════════════════════════ */
 .left-side { flex:0 0 320px; display:flex; flex-direction:column; min-width:0; min-height:0; }
 .screen-number { font-size:52px; font-weight:900; color:var(--accent); line-height:1; }
-.title { margin-top:4px; font-size:46px; line-height:0.93; white-space:pre-line; font-weight:900; font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; color:var(--text); word-break:keep-all; max-width:320px; letter-spacing:-0.5px; }
+.title { 
+  margin-top:4px; 
+  font-size:40px; 
+  line-height:0.93; 
+  white-space:pre-line; 
+  font-weight:900; 
+  font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; 
+  color:var(--text); 
+  word-wrap:break-word; 
+  max-width:100%; 
+  letter-spacing:-0.5px; 
+}
 .subtitle { margin-top:12px; color:var(--text-muted); font-size:14px; line-height:1.5; font-weight:400; max-width:280px; }
 
 /* Controls */
@@ -193,7 +204,7 @@ body {
 
 .saved-grid { 
   flex:1; display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap:16px; align-content:start; min-height:0; padding-right:8px; overflow-y:auto; 
+  gap:16px; align-content:start; min-height:0; padding-right:8px; padding-top: 12px; overflow-y:auto; 
 }
 .saved-grid::-webkit-scrollbar { width:6px; }
 .saved-grid::-webkit-scrollbar-track { background:transparent; }
@@ -205,6 +216,7 @@ body {
   background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 16px; 
   padding: 16px;
   cursor: pointer; position: relative; transition: border-color .2s, transform .2s, box-shadow .2s; 
+  overflow: visible;
 }
 [data-theme="light"] .saved-palette-card { border-color: var(--card-border); }
 .saved-palette-card:hover { border-color: var(--accent); transform: translateY(-2px); }
@@ -215,11 +227,10 @@ body {
 
 .card-bottom-info { display: flex; justify-content: space-between; align-items: center; }
 .card-text-block { display: flex; flex-direction: column; gap: 2px; }
-/* УВЕЛИЧЕННЫЕ ШРИФТЫ В КАРТОЧКАХ */
 .card-palette-name { font-size: 15px; font-weight: 700; color: var(--text); max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-palette-date { font-size: 13px; color: var(--text-muted); }
 
-.saved-delete-btn { position:absolute; top: -8px; right: -8px; width:22px; height:22px; background:rgba(0,0,0,0.7); border:none; border-radius:50%; color:#fff; font-size:11px; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s,background .2s; z-index:5; }
+.saved-delete-btn { position:absolute; top: -10px; right: -10px; width:26px; height:26px; background:rgba(0,0,0,0.7); border:none; border-radius:50%; color:#fff; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s,background .2s; z-index:5; }
 .saved-palette-card:hover .saved-delete-btn { opacity:1; }
 .saved-delete-btn:hover { background:var(--danger); }
 
@@ -237,7 +248,6 @@ body {
 .expand-modal { background:var(--card-bg); border:2px solid var(--border-light); border-radius:26px; padding:32px 36px; width:680px; display:flex; flex-direction:column; gap:20px; position:relative; }
 .expand-header { display:flex; justify-content:space-between; align-items:flex-start; }
 
-/* Редактирование заголовка */
 .expand-title { font-size:28px; font-weight:900; color:var(--text); cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:opacity .2s; }
 .expand-title:hover { opacity:0.8; }
 .edit-icon { font-size:16px; opacity:0.5; }
@@ -282,7 +292,7 @@ body {
 @keyframes splashPop{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}65%{transform:translate(-50%,-50%) scale(1.1);opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
 
 .nav-icon-img {
-  width:42px; height:auto; position:relative; z-index:3; opacity:0.7;
+  width:52px; height:auto; position:relative; z-index:3; opacity:0.7;
   transition:opacity .2s; filter:brightness(0) invert(1);
 }
 .nav-item.active .nav-icon-img { filter:brightness(0); opacity:1; animation:iconBounce .3s ease-out; }
@@ -294,10 +304,10 @@ body {
 
 .nav-content { display:flex; flex-direction:column; gap:1px; }
 
-.nav-number { font-size:30px; font-weight:900; color:var(--text-dim); line-height:1; transition:color .2s; }
-.nav-title  { white-space:pre-line; color:var(--text-dim); font-size:11px; letter-spacing: 0.3px; line-height:1.2; font-weight:600; transition:color .2s; }
+.nav-number { font-size:34px; font-weight:900; color:var(--text-dim); line-height:1; transition:color .2s; }
+.nav-title  { white-space:pre-line; color:var(--text-dim); font-size:14px; letter-spacing: 0.5px; line-height:1.2; font-weight:700; transition:color .2s; }
 
-/* ЦВЕТА НАВИГАЦИИ В СВЕТЛОЙ ТЕМЕ - ДЕЛАЕМ ЧЁТЧЕ И ТЕМНЕЕ */
+/* ЦВЕТА НАВИГАЦИИ В СВЕТЛОЙ ТЕМЕ */
 [data-theme="light"] .nav-title { color: #111111; font-weight: 800; }
 [data-theme="light"] .nav-number { color: #444444; }
 
@@ -308,4 +318,9 @@ body {
 .nav-item:hover .nav-number,
 .nav-item:hover .nav-title   { color:var(--text-muted); }
 [data-theme="light"] .nav-item:hover .nav-number,
-[data-theme="light"] .nav-item:hover .nav-title { color:#000; }
+[data-theme="light"] .nav-item:hover .nav-title { color:#000; } 
+
+
+/* ── УВЕЛИЧЕННЫЕ ШРИФТЫ ДЛЯ АНГЛИЙСКОЙ ВЕРСИИ ── */
+[data-lang="en"] .title { font-size: 44px; }
+[data-lang="en"] .nav-title { font-size: 15px; }

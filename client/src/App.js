@@ -371,7 +371,7 @@ function App(){
   const sc=screens[currentScreen];
 
   return(
-    <div className="app" data-theme={theme}>
+    <div className="app" data-theme={theme} data-lang={lang}>
       <Toast msg={toast}/>
       {auth.showModal&&<AuthModal t={t} users={users} setUsers={setUsers}
         onClose={()=>setAuth(a=>({...a,showModal:false}))}
