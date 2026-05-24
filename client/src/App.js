@@ -104,7 +104,7 @@ const LANG = {
   },
 };
 
-/* ─── API helpers ─────────────────────────────────────────── */
+/* API helpers */
 async function askClaude(p, s) {
   const res = await fetch(API_URL, {
     method: "POST",
@@ -164,15 +164,14 @@ const extractColorsFromImage = imgElement => {
   return selected;
 };
 
-/* ─── Small components ───────────────────────────────────── */
+
 function Toast({ msg }) {
   if (!msg) return null;
   return <div className="toast">{msg}</div>;
 }
 
-/* ─── BouncyText: только радужный цвет на букве, без движения ─── */
+
 function BouncyText({ text }) {
-  // Яркие радужные цвета
   const rainbowColors = [
     "#FF3333", "#FF7700", "#FFD700",
     "#33DD44", "#00BBFF", "#7755FF", "#FF33CC"
@@ -189,7 +188,6 @@ function BouncyText({ text }) {
             key={i}
             className="bouncy-char"
             onMouseEnter={e => {
-              // Отменяем таймер гашения, если он был
               if (timers.current[i]) {
                 clearTimeout(timers.current[i]);
                 timers.current[i] = null;
@@ -200,7 +198,6 @@ function BouncyText({ text }) {
             }}
             onMouseLeave={e => {
               const el = e.currentTarget;
-              // Ждём 1.5с, затем плавно гасим цвет
               timers.current[i] = setTimeout(() => {
                 el.style.transition = 'color 0.9s ease';
                 el.style.color = '';
@@ -288,7 +285,7 @@ function ExpandModal({ palette, t, onClose, onRename }) {
   );
 }
 
-/* ─── Auth Modal ──────────────────────────── */
+/* Auth Modal */
 function AuthModal({ t, onClose, onLogin }) {
   const [mode, setMode] = useState("login");
   const [un, setUn]     = useState("");
@@ -336,7 +333,7 @@ function AuthModal({ t, onClose, onLogin }) {
   );
 }
 
-/* ─── Eyedropper image ───────────────────────────────────── */
+/* Eyedropper image */
 function ImageWithEyedropper({ src, onRemove, clickToCopy }) {
   const wrapRef   = useRef(null);
   const canvasRef = useRef(null);
@@ -392,7 +389,7 @@ function ImageWithEyedropper({ src, onRemove, clickToCopy }) {
   );
 }
 
-/* ═══ APP ═════════════════════════════════════════════════════ */
+/* APP */
 function App() {
   const [currentScreen, setCurrentScreen] = useState(0);
   const [toast,  setToast]  = useState("");
@@ -477,61 +474,61 @@ function App() {
   };
 
   const saveCurrent = async name => {
-  if (isDefault) return;
-  if (!auth.isLoggedIn) { showToast("Сначала войдите"); setAuth(a => ({ ...a, showModal:true })); return; }
-  
-  const isDuplicate = savedPalettes.some(p => p.colors.length === colors.length && p.colors.every((c, i) => c.toUpperCase() === colors[i].toUpperCase()));
-  if (isDuplicate) { showToast("Такая палитра уже сохранена"); return; }
-  
-  try {
-    const res = await fetch(`${API}/palette/save`, {
-      method: "POST",
-      headers: { "Content-Type":"application/json", Authorization: localStorage.getItem("token") },
-      body: JSON.stringify({ name: name || t.palette, colors }),
-    });
-    
-    if (!res.ok) throw new Error();
-    
-    const data = await res.json();
-    
-    if (data.palette) {
-      const newPaletteWithDate = {
-        ...data.palette,
-        date: new Date().toLocaleDateString("ru-RU")
-      };
-      setSavedPalettes(prev => [newPaletteWithDate, ...prev]);
-    }
-    
-    showToast("✓ Сохранено");
-  } catch { 
-    showToast("Ошибка сохранения"); 
-  }
-};
-  const deletePalette = async (id, e) => {
-  e.stopPropagation(); 
-  
-  try {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`${API}/palette/delete/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: token
-      }
-    });
+    if (isDefault) return;
+    if (!auth.isLoggedIn) { showToast("Сначала войдите"); setAuth(a => ({ ...a, showModal:true })); return; }
 
-    if (!res.ok) {
+    const isDuplicate = savedPalettes.some(p => p.colors.length === colors.length && p.colors.every((c, i) => c.toUpperCase() === colors[i].toUpperCase()));
+    if (isDuplicate) { showToast("Такая палитра уже сохранена"); return; }
+
+    try {
+      const res = await fetch(`${API}/palette/save`, {
+        method: "POST",
+        headers: { "Content-Type":"application/json", Authorization: localStorage.getItem("token") },
+        body: JSON.stringify({ name: name || t.palette, colors }),
+      });
+
+      if (!res.ok) throw new Error();
+
       const data = await res.json();
-      showToast(data.message || "Ошибка при удалении");
-      return;
-    }
 
-    setSavedPalettes(prev => prev.filter(x => x.id !== id));
-    showToast("✓ Палитра удалена");
-  } catch (error) {
-    console.error(error);
-    showToast("Нет соединения с сервером");
-  }
-};
+      if (data.palette) {
+        const newPaletteWithDate = {
+          ...data.palette,
+          date: new Date().toLocaleDateString("ru-RU")
+        };
+        setSavedPalettes(prev => [newPaletteWithDate, ...prev]);
+      }
+
+      showToast("✓ Сохранено");
+    } catch {
+      showToast("Ошибка сохранения");
+    }
+  };
+
+  const deletePalette = async (id, e) => {
+    e.stopPropagation();
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${API}/palette/delete/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: token }
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        showToast(data.message || "Ошибка при удалении");
+        return;
+      }
+
+      setSavedPalettes(prev => prev.filter(x => x.id !== id));
+      showToast("✓ Палитра удалена");
+    } catch (error) {
+      console.error(error);
+      showToast("Нет соединения с сервером");
+    }
+  };
+
   const updatePaletteName = (id, newName) => { setSavedPalettes(prev => prev.map(p => p.id === id ? { ...p, name:newName } : p)); };
 
   const processImageFile = async file => {
