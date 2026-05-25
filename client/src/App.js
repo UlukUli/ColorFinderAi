@@ -13,9 +13,7 @@ import paintSplash from "./assets/paint-splash.png";
 import iconSaved   from "./assets/icon-saved.png";
 import iconLogout  from "./assets/icon-logout.png";
 
-const API_URL = "https://api.anthropic.com/v1/messages";
-const MODEL   = "claude-sonnet-4-20250514";
-const API     = "http://localhost:5000";
+const API = "";
 
 const LANG = {
   ru: {
@@ -104,15 +102,16 @@ const LANG = {
   },
 };
 
-/* API helpers */
-async function askClaude(p, s) {
-  const res = await fetch(API_URL, {
+/* ─── API helpers ─────────────────────────────────────────── */
+async function askClaude(prompt, system) {
+  const res = await fetch(`${API}/ai/ask`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model:MODEL, max_tokens:500, system:s, messages:[{role:"user",content:p}] }),
+    body: JSON.stringify({ prompt, system }),
   });
   const d = await res.json();
-  return d.content.map(b => b.text || "").join("");
+  if (!res.ok) throw new Error(d.message || "AI error");
+  return d.text;
 }
 
 function extractHex(t) {
@@ -164,13 +163,13 @@ const extractColorsFromImage = imgElement => {
   return selected;
 };
 
-
+/* ─── Small components ───────────────────────────────────── */
 function Toast({ msg }) {
   if (!msg) return null;
   return <div className="toast">{msg}</div>;
 }
 
-
+/* ─── BouncyText: только радужный цвет на букве, без движения ─── */
 function BouncyText({ text }) {
   const rainbowColors = [
     "#FF3333", "#FF7700", "#FFD700",
@@ -285,7 +284,7 @@ function ExpandModal({ palette, t, onClose, onRename }) {
   );
 }
 
-/* Auth Modal */
+/* ─── Auth Modal ──────────────────────────── */
 function AuthModal({ t, onClose, onLogin }) {
   const [mode, setMode] = useState("login");
   const [un, setUn]     = useState("");
@@ -333,7 +332,7 @@ function AuthModal({ t, onClose, onLogin }) {
   );
 }
 
-/* Eyedropper image */
+/* ─── Eyedropper image ───────────────────────────────────── */
 function ImageWithEyedropper({ src, onRemove, clickToCopy }) {
   const wrapRef   = useRef(null);
   const canvasRef = useRef(null);
@@ -389,7 +388,7 @@ function ImageWithEyedropper({ src, onRemove, clickToCopy }) {
   );
 }
 
-/* APP */
+/* ═══ APP ═════════════════════════════════════════════════════ */
 function App() {
   const [currentScreen, setCurrentScreen] = useState(0);
   const [toast,  setToast]  = useState("");

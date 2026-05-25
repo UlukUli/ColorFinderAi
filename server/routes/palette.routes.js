@@ -4,6 +4,7 @@ const db = require("../database");
 
 const auth = require("../middleware/auth");
 
+
 router.delete("/delete/:id", auth, (req, res) => {
   const paletteId = req.params.id;
   const userId = req.user.id;
