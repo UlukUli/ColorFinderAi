@@ -4,7 +4,6 @@ const db = require("../database");
 
 const auth = require("../middleware/auth");
 
-
 router.delete("/delete/:id", auth, (req, res) => {
   const paletteId = req.params.id;
   const userId = req.user.id;
@@ -22,7 +21,7 @@ router.delete("/delete/:id", auth, (req, res) => {
 
       if (this.changes === 0) {
         return res
-          .status(44)
+          .status(404)
           .json({ message: "Палетка не найдена или у вас нет прав" });
       }
 

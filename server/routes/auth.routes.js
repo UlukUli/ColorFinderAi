@@ -30,7 +30,7 @@ VALUES (?,?)
         {
           id: this.lastID,
         },
-        "SECRET_KEY",
+        process.env.JWT_SECRET || "SECRET_KEY",
       );
 
       res.json({
@@ -71,7 +71,7 @@ WHERE username=?
         {
           id: user.id,
         },
-        "SECRET_KEY",
+        process.env.JWT_SECRET || "SECRET_KEY",
       );
 
       res.json({
