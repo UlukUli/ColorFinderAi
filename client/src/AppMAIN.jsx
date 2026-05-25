@@ -558,19 +558,32 @@ function AppMAIN() {
   };
 
   const handleGenerateRandom = async () => {
-    setLoading(true); setRandomTheme("");
-    try {
-      const raw = await askClaude("Invent a random creative theme and 7 colors.", `Return JSON: {"theme":"Theme in Russian","colors":"HEX HEX HEX HEX HEX HEX HEX"}. No extra text.`);
-      const obj = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setRandomTheme(obj.theme || "Случайная тема");
-      const c = extractHex(obj.colors || "");
-      if (c.length >= 4) setColors(c.slice(0,7).map(h => "#"+h)); else throw new Error();
-    } catch {
-      const themes = ["Космический закат","Неоновый киберпанк","Снежный лес","Утренняя мята","Глубокий океан"];
-      setRandomTheme(themes[Math.floor(Math.random()*themes.length)]);
-      setColors(Array.from({length:7}, () => rgbToHex(Math.floor(Math.random()*256), Math.floor(Math.random()*256), Math.floor(Math.random()*256))));
-    } finally { setLoading(false); }
-  };
+  setLoading(true); setRandomTheme("");
+  const categories = [
+    "food and cuisine", "space and cosmos", "seasons and weather",
+    "animals and wildlife", "cities and architecture", "art and painting styles",
+    "music genres", "holidays and celebrations", "underwater world",
+    "mountains and forests", "vintage and retro", "technology and future",
+    "Japanese culture", "desserts and sweets", "morning and sunrise",
+    "fairy tales", "sports", "flowers and gardens", "ancient civilizations",
+    "emotions and feelings"
+  ];
+  const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+  try {
+    const raw = await askClaude(
+      `Invent a creative theme about "${randomCategory}" and 7 matching colors.`,
+      `Return JSON: {"theme":"Theme in Russian","colors":"HEX HEX HEX HEX HEX HEX HEX"}. No extra text.`
+    );
+    const obj = JSON.parse(raw.replace(/```json|```/g, "").trim());
+    setRandomTheme(obj.theme || "Случайная тема");
+    const c = extractHex(obj.colors || "");
+    if (c.length >= 4) setColors(c.slice(0,7).map(h => "#"+h)); else throw new Error();
+  } catch {
+    const themes = ["Космический закат","Неоновый киберпанк","Снежный лес","Утренняя мята","Глубокий океан"];
+    setRandomTheme(themes[Math.floor(Math.random()*themes.length)]);
+    setColors(Array.from({length:7}, () => rgbToHex(Math.floor(Math.random()*256), Math.floor(Math.random()*256), Math.floor(Math.random()*256))));
+  } finally { setLoading(false); }
+};
 
   const handleGenerateShades = hex => { setBaseColor(hex); setColors(computeShades(hex)); };
 
